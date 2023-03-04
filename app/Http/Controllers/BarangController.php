@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Storage;
+use Str;
 
 class BarangController extends Controller
 {
@@ -49,16 +50,26 @@ class BarangController extends Controller
      */
     public function store(Request $request)
     {
+
         //
         $barang_model = new Barang();
 
+        $daftar_barang = $barang_model->select('nama_barang')->get()->all();
+        $undercase_barang = array_map('strtolower',$daftar_barang);
+
+
         $request->validate([
-           'nama_barang' => 'required|unique:barang,nama_barang',
+            'nama_barang' => [
+                'required',
+                'unique:barang,nama_barang',
+                Rule::notIn($undercase_barang)
+            ],
             'harga_jual' => 'required|numeric',
             'stok' => 'required|numeric',
             'harga_beli' => 'required|numeric',
             'foto_barang' => 'required|image|mimes:jpeg,png|file|max:100',
         ]);
+
 
         $barang_model->nama_barang = $request->nama_barang;
         $barang_model->harga_beli = $request->harga_beli;
@@ -68,7 +79,7 @@ class BarangController extends Controller
         if ($request->file('foto_barang')) {
             $file_foto_barang = $request->file('foto_barang');
 
-            $name_foto_barang = $request->nama_barang.'_foto_.'.$file_foto_barang->extension();
+            $name_foto_barang = $request->nama_barang.'_foto_'.Str::random(32).'.'.$file_foto_barang->extension();
             $file_foto_barang->move(public_path().'/upload/barang/',$name_foto_barang);
 
             $barang_model->foto_barang = $name_foto_barang;
@@ -155,10 +166,13 @@ class BarangController extends Controller
     public function updateBarang(Request $request){
         $barang_model = Barang::find($request->id_barang);
 
+        $undercase_barang = array_map('strtolower',Barang::select('nama_barang')->get()->all());
+
         $request->validate([
             'nama_barang' => [
                 'required',
                 Rule::unique('barang')->ignore($barang_model->id),
+                Rule::notIn($undercase_barang)
             ],
             'harga_jual' => 'required|numeric',
             'stok' => 'required|numeric',
@@ -176,7 +190,7 @@ class BarangController extends Controller
             File::delete(public_path().'/upload/barang/'.$barang_model->foto_barang);
 
             $file_foto_barang = $request->file('foto_barang');
-            $name_foto_barang = $request->nama_barang.'_foto_.'.$file_foto_barang->extension();
+            $name_foto_barang = $request->nama_barang.'_foto_'.Str::random(32).'.'.$file_foto_barang->extension();
             $file_foto_barang->move(public_path().'/upload/barang/',$name_foto_barang);
             $barang_model->foto_barang = $name_foto_barang;
         }

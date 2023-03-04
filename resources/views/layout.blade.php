@@ -4,7 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>Nutech Technical Test</title>
+
+    <link href="{{asset('assets/datatables/datatables.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/bootstrap-5.3.0-a1/css/bootstrap.css')}}" rel="stylesheet">
+    <script src="{{asset('assets/jquery/jquery-3.6.3.js')}}" ></script>
+    <script src="{{asset('assets/datatables/datatables.js')}}"></script>
+    <script src="{{asset('assets/bootstrap-5.3.0-a1/js/bootstrap.bundle.js')}}"></script>
 
     <!-- Fonts -->
     <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
@@ -20,13 +26,9 @@
         }
     </style>
 
-    <link href="{{asset('assets/datatables/datatables.css')}}" rel="stylesheet">
-    <script src="{{asset('assets/jquery/jquery-3.6.3.js')}}" ></script>
-    <script src="{{asset('assets/datatables/datatables.js')}}"></script>
-
 
     <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js'])--}}
 
 
 </head>
